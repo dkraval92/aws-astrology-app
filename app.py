@@ -2,27 +2,37 @@ from flask import Flask, render_template, request
 import hashlib
 import ephem
 import math
+from geopy.geocoders import Nominatim
 
 app = Flask(__name__)
+# Geolocator API जो शहर के नाम को Latitude/Longitude में बदलेगी
+geolocator = Nominatim(user_agent="aws_cloud_astrology_app")
 
-def calculate_real_moon_sign(dob, time_str):
+def calculate_real_moon_sign(dob, time_str, place):
     try:
-        # Date और Time को ephem फॉर्मेट (YYYY/MM/DD HH:MM:SS) में बदलना
+        # शहर के नाम से Latitude और Longitude निकालना
+        try:
+            location = geolocator.geocode(place, timeout=5)
+            lat = str(location.latitude)
+            lon = str(location.longitude)
+        except:
+            # अगर कोई छोटा गांव डाला जो मैप पर न मिले, तो डिफ़ॉल्ट इंडिया की लोकेशन ले लेगा
+            lat = '20.5937'
+            lon = '78.9629'
+
         date_format = dob.replace("-", "/") + " " + time_str
         
         observer = ephem.Observer()
         observer.date = date_format
+        observer.lat = lat  # सटीक कैलकुलेशन के लिए Latitude
+        observer.lon = lon  # सटीक कैलकुलेशन के लिए Longitude
         
         moon = ephem.Moon()
         moon.compute(observer)
         
-        # Moon की Tropical Longitude (Degrees में)
+        # वैदिक अयानांश घटाकर मून साइन निकालना
         lon_deg = math.degrees(ephem.Ecliptic(moon).lon)
-        
-        # वैदिक ज्योतिष (Sidereal) के लिए Lahiri Ayanamsa (approx 24.13°) घटाना
         vedic_lon = (lon_deg - 24.13) % 360
-        
-        # 30-30 डिग्री की एक राशि होती है
         sign_index = int(vedic_lon / 30)
         
         rashis = ["Mesha (Aries) ♈", "Vrishabha (Taurus) ♉", "Mithuna (Gemini) ♊", "Karka (Cancer) ♋", 
@@ -33,31 +43,29 @@ def calculate_real_moon_sign(dob, time_str):
     except Exception as e:
         return "Unable to calculate"
 
-def get_prediction(name, dob, time_str):
-    # असली चंद्र राशि निकालना
-    moon_sign = calculate_real_moon_sign(dob, time_str)
+def get_prediction(name, dob, time_str, place):
+    moon_sign = calculate_real_moon_sign(dob, time_str, place)
     
-    # Career, Money, Marriage के लिए हम Mock Logic (Hash) ही रखेंगे ताकि रिजल्ट्स फिक्स रहें
-    hash_str = f"{name}{dob}"
+    hash_str = f"{name}{dob}{place}"
     hash_val = int(hashlib.md5(hash_str.encode()).hexdigest(), 16)
     
     careers = [
-        "Excellent time for IT, Cloud Computing, and DevOps roles. Leadership opportunities are visible.",
-        "A sudden positive shift in your career path. Hard work will bring technical promotions.",
-        "Favorable period for foreign opportunities or remote jobs with high packages.",
-        "Your analytical skills will shine. Great time to switch jobs for a better role."
+        "Excellent planetary alignments for IT, Cloud, and DevOps. Major success indicated.",
+        "Sudden positive shift in career. Focus on upskilling, promotion is on the way.",
+        "Foreign travel or high-paying remote opportunities are strongly visible in your chart.",
+        "Great time for leadership roles. Your technical skills will bring major financial rewards."
     ]
     money = [
-        "Financial stability is strong. Good time for long-term investments in assets.",
-        "Unexpected financial gains are indicated in the next 3 months.",
-        "Avoid speculative investments right now; focus on saving your current income.",
-        "Past investments will start yielding excellent returns very soon."
+        "Strong wealth yog! Long-term investments will yield excellent returns.",
+        "Unexpected financial gains from past work. A very prosperous period.",
+        "Stable income flow. Avoid risky investments for the next 45 days.",
+        "Your hard work is converting into solid assets. Great time to buy property."
     ]
     marriage = [
-        "Harmonious planetary alignments indicate peace and support from your partner.",
-        "If you are single, there are high chances of finding a compatible partner soon.",
-        "Focus on clear communication. A very stable and happy family life is predicted.",
-        "Venus is in a strong position, bringing love, care, and mutual respect in relationships."
+        "Venus and Jupiter indicate a highly supportive and loving life partner.",
+        "Perfect time for relationships. A deep, soulful connection is on the horizon.",
+        "Harmony in personal life will give you peace of mind to focus on career.",
+        "Mutual respect and immense love are the foundation of your relationship axis."
     ]
     
     return {
@@ -71,12 +79,15 @@ def get_prediction(name, dob, time_str):
 def index():
     result = None
     if request.method == 'POST':
-        name = request.form.get('name')
+        # name.title() पहला अक्षर अपने आप Capital कर देगा (उदा: rahul -> Rahul)
+        name = request.form.get('name').title() 
         dob = request.form.get('dob')
         time_str = request.form.get('time')
+        place = request.form.get('place')
         
-        result = get_prediction(name, dob, time_str)
+        result = get_prediction(name, dob, time_str, place)
         result['name'] = name
+        result['place'] = place.title()
         
     return render_template('index.html', result=result)
 
