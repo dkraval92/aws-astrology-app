@@ -16,7 +16,7 @@
         body {
             font-family: 'Inter', sans-serif;
             margin: 0; padding: 0; color: var(--text-light);
-            background: radial-gradient(circle at 75% 50%, #161f48 0%, var(--bg-deep) 65%);
+            background: radial-gradient(circle at 75% 50%, #0d1538 0%, var(--bg-deep) 70%);
             min-height: 100vh; overflow-x: hidden;
         }
 
@@ -64,56 +64,55 @@
         button:hover { background: #b8972e; box-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
 
         /* ========================================================
-           RIGHT SIDE: GLOWING ROTATING MILKY WAY GALAXY
+           RIGHT SIDE: ANDROMEDA GALAXY (M31) GLOW & ROTATION
         ======================================================== */
         .galaxy-wrapper {
             position: relative;
-            width: 480px;
-            height: 480px;
+            width: 520px;
+            height: 520px;
             display: flex;
             justify-content: center;
             align-items: center;
+            animation: andromedaPulse 6s ease-in-out infinite alternate;
         }
 
-        /* Pulsating Cosmic Glow Behind the Galaxy */
+        /* Ambient Cosmic Background Glow */
         .galaxy-glow-aura {
             position: absolute;
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            background: radial-gradient(circle, rgba(140, 100, 255, 0.35) 0%, rgba(212, 175, 55, 0.25) 40%, rgba(5, 8, 20, 0) 70%);
-            animation: pulseGlow 5s ease-in-out infinite alternate;
+            background: radial-gradient(circle, rgba(235, 60, 150, 0.28) 0%, rgba(65, 140, 255, 0.22) 45%, rgba(5, 8, 20, 0) 75%);
             pointer-events: none;
         }
 
-        /* The Spinning Milky Way Galaxy Disc */
-        .milkyway-disc {
-            width: 95%;
-            height: 95%;
+        /* Seamless Rotating Andromeda Galaxy Image */
+        .andromeda-disc {
+            width: 96%;
+            height: 96%;
             object-fit: cover;
             border-radius: 50%;
-            /* Smooth feathered edges to blend with the space background */
-            mask-image: radial-gradient(circle at center, black 52%, transparent 72%);
-            -webkit-mask-image: radial-gradient(circle at center, black 52%, transparent 72%);
-            filter: brightness(1.2) contrast(1.1) drop-shadow(0 0 30px rgba(212, 175, 55, 0.6));
-            animation: spinGalaxy 55s linear infinite;
+            /* Feathered edge to completely dissolve boundaries into space */
+            mask-image: radial-gradient(circle at center, black 42%, transparent 68%);
+            -webkit-mask-image: radial-gradient(circle at center, black 42%, transparent 68%);
+            animation: spinAndromeda 70s linear infinite;
         }
 
-        @keyframes spinGalaxy {
+        /* Slow-motion Smooth 360 Rotation */
+        @keyframes spinAndromeda {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
 
-        @keyframes pulseGlow {
+        /* Breathing Slow-Motion Glow Effect */
+        @keyframes andromedaPulse {
             0% {
-                transform: scale(0.94);
-                filter: drop-shadow(0 0 20px rgba(100, 160, 255, 0.4));
-                opacity: 0.7;
+                transform: scale(0.96);
+                filter: brightness(1.05) contrast(1.1) drop-shadow(0 0 25px rgba(235, 60, 150, 0.4)) drop-shadow(0 0 50px rgba(70, 140, 255, 0.45));
             }
             100% {
-                transform: scale(1.08);
-                filter: drop-shadow(0 0 55px rgba(212, 175, 55, 0.8)) drop-shadow(0 0 70px rgba(138, 43, 226, 0.6));
-                opacity: 1;
+                transform: scale(1.03);
+                filter: brightness(1.3) contrast(1.18) drop-shadow(0 0 50px rgba(255, 80, 180, 0.8)) drop-shadow(0 0 85px rgba(100, 180, 255, 0.75));
             }
         }
 
@@ -185,11 +184,12 @@
             {% endif %}
         </div>
 
-        <!-- Right Side: Glowing Rotating Milky Way Galaxy -->
+        <!-- Right Side: Exact Andromeda Galaxy Image with Dynamic Rotation & Glow -->
         <div class="right-content">
             <div class="galaxy-wrapper">
                 <div class="galaxy-glow-aura"></div>
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Milky_Way_Galaxy.jpg/800px-Milky_Way_Galaxy.jpg" alt="Milky Way Galaxy" class="milkyway-disc">
+                <!-- High-Resolution Robert Gendler / Subaru / Hubble composite of M31 -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/Andromeda_Galaxy_%28with_h-alpha%29.jpg/1024px-Andromeda_Galaxy_%28with_h-alpha%29.jpg" alt="Andromeda Galaxy" class="andromeda-disc">
             </div>
         </div>
     </main>
