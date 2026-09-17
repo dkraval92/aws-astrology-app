@@ -7,31 +7,28 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            margin: 0; padding: 0; color: #ffffff;
+            font-family: 'Poppins', sans-serif; margin: 0; padding: 0; color: #ffffff;
             display: flex; justify-content: center; align-items: center;
-            min-height: 100vh; overflow-x: hidden;
-            background-color: #000;
+            min-height: 100vh; overflow-x: hidden; background-color: #000;
         }
 
-        /* Smooth Background Slideshow */
-        .bg-slider { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -2; }
-        .slide {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-size: cover; background-position: center;
-            opacity: 0; transition: opacity 3s ease-in-out; /* 3-second smooth fade */
+        /* Running Galaxy Video Background */
+        .bg-video {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            object-fit: cover; z-index: -2; opacity: 0.8;
         }
-        .slide.active { opacity: 0.8; }
-        .overlay { position: fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.5); z-index: -1; }
+        .overlay {
+            position: fixed; top:0; left:0; width:100vw; height:100vh;
+            background: rgba(10, 5, 25, 0.4); z-index: -1;
+        }
 
-        /* Super Glowing Floating Symbols */
+        /* Indian Glowing Symbols */
         .symbols { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
         .symbol { 
-            position: absolute; color: #fff; font-size: 45px;
+            position: absolute; color: #fff; font-size: 50px; font-weight: bold;
             animation: floatUp 20s linear infinite;
-            /* Magical Glow Effect */
-            text-shadow: 0 0 10px #ffd700, 0 0 20px #ff8c00, 0 0 40px #ff00ff, 0 0 60px #00ffff;
-            opacity: 0.9;
+            text-shadow: 0 0 15px #ffd700, 0 0 25px #ff8c00, 0 0 50px #ff00ff;
+            opacity: 0.85;
         }
         @keyframes floatUp {
             0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
@@ -41,26 +38,31 @@
         }
 
         .container {
-            background: rgba(10, 5, 20, 0.65);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            padding: 40px; border-radius: 20px;
+            background: rgba(15, 8, 30, 0.7); backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 215, 0, 0.4); padding: 40px; border-radius: 20px;
             box-shadow: 0 15px 50px rgba(0,0,0,0.9), 0 0 20px rgba(255,215,0,0.2) inset;
-            width: 100%; max-width: 450px; z-index: 1; margin: 20px;
+            width: 100%; max-width: 800px; z-index: 1; margin: 20px;
         }
 
         h2 { text-align: center; color: #ffd700; font-weight: 600; margin-bottom: 5px; text-shadow: 0 0 15px rgba(255,215,0,0.8); }
-        p.subtitle { text-align: center; font-size: 13px; color: #dddddd; margin-bottom: 30px; letter-spacing: 1px; }
+        p.subtitle { text-align: center; font-size: 14px; color: #dddddd; margin-bottom: 30px; letter-spacing: 1px; }
         
-        label { font-size: 13px; color: #dddddd; margin-bottom: 5px; display: block; letter-spacing: 0.5px; }
+        /* HORIZONTAL FORM LAYOUT */
+        .form-row {
+            display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 25px;
+        }
+        .form-group {
+            flex: 1; min-width: 150px; display: flex; flex-direction: column;
+        }
+        
+        label { font-size: 13px; color: #dddddd; margin-bottom: 5px; letter-spacing: 0.5px; }
         input {
-            width: 100%; padding: 12px; margin-bottom: 20px; box-sizing: border-box;
-            background: rgba(0, 0, 0, 0.6); border: 1px solid #555;
+            width: 100%; padding: 12px; box-sizing: border-box;
+            background: rgba(0, 0, 0, 0.6); border: 1px solid #666;
             color: white; border-radius: 8px; font-family: 'Poppins', sans-serif;
         }
         input:focus { outline: none; border-color: #ffd700; box-shadow: 0 0 10px rgba(255,215,0,0.5); }
-        input[name="name"], input[name="place"] { text-transform: capitalize; }
-
+        
         button {
             width: 100%; padding: 14px; background: linear-gradient(45deg, #d4af37, #ff8c00);
             color: #111; border: none; border-radius: 8px; font-weight: 600;
@@ -69,35 +71,33 @@
         }
         button:hover { background: linear-gradient(45deg, #ff8c00, #d4af37); box-shadow: 0 0 25px rgba(212, 175, 55, 0.8); color: white;}
         
-        .result-box { margin-top: 25px; padding: 20px; background: rgba(0, 0, 0, 0.7); border-radius: 12px; border-left: 4px solid #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.1); }
-        .result-item { margin-bottom: 15px; font-size: 14px; color: #eeeeee; line-height: 1.5; }
+        .result-box { margin-top: 30px; padding: 20px; background: rgba(0, 0, 0, 0.75); border-radius: 12px; border-left: 4px solid #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.1); }
+        .result-item { margin-bottom: 15px; font-size: 15px; color: #eeeeee; line-height: 1.5; }
         .result-item span { font-weight: 600; color: #ffd700; display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px;}
+
+        /* Mobile View: Make it stack vertically if screen is small */
+        @media (max-width: 600px) {
+            .form-row { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
 
-    <!-- Smooth Background Slider -->
-    <div class="bg-slider">
-        <!-- Galaxy -->
-        <div class="slide active" style="background-image: url('https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?q=80&w=2000');"></div>
-        <!-- Planet Earth/Space -->
-        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?q=80&w=2000');"></div>
-        <!-- Pillars of Creation / Nebula -->
-        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2000');"></div>
-        <!-- Stars/Milky Way -->
-        <div class="slide" style="background-image: url('https://images.unsplash.com/photo-1543722530-d2c3201371e7?q=80&w=2000');"></div>
-    </div>
+    <!-- Stunning Galaxy Running Video -->
+    <video autoplay muted loop playsinline class="bg-video">
+        <source src="https://cdn.pixabay.com/video/2021/08/04/83866-584742616_large.mp4" type="video/mp4">
+    </video>
     <div class="overlay"></div>
 
-    <!-- Glowing Floating Symbols -->
+    <!-- Glowing Indian Astrology Symbols -->
     <div class="symbols">
-        <div class="symbol" style="left: 10%; animation-duration: 25s; animation-delay: 0s;">♈</div>
-        <div class="symbol" style="left: 25%; animation-duration: 20s; animation-delay: 5s;">♌</div>
-        <div class="symbol" style="left: 60%; animation-duration: 22s; animation-delay: 2s;">♏</div>
-        <div class="symbol" style="left: 85%; animation-duration: 28s; animation-delay: 7s;">♒</div>
-        <div class="symbol" style="left: 45%; animation-duration: 24s; animation-delay: 12s;">♉</div>
-        <div class="symbol" style="left: 75%; animation-duration: 26s; animation-delay: 15s;">♓</div>
-        <div class="symbol" style="left: 15%; animation-duration: 18s; animation-delay: 10s;">♊</div>
+        <div class="symbol" style="left: 10%; animation-duration: 25s; animation-delay: 0s;">ॐ</div>
+        <div class="symbol" style="left: 35%; animation-duration: 20s; animation-delay: 5s;">卐</div>
+        <div class="symbol" style="left: 60%; animation-duration: 22s; animation-delay: 2s;">🔱</div>
+        <div class="symbol" style="left: 85%; animation-duration: 28s; animation-delay: 7s;">✨</div>
+        <div class="symbol" style="left: 20%; animation-duration: 24s; animation-delay: 12s;">☀️</div>
+        <div class="symbol" style="left: 75%; animation-duration: 26s; animation-delay: 15s;">🌙</div>
+        <div class="symbol" style="left: 45%; animation-duration: 18s; animation-delay: 10s;">🕉️</div>
     </div>
 
     <div class="container">
@@ -105,17 +105,25 @@
         <p class="subtitle">Advanced Cloud Astrology System</p>
 
         <form method="POST">
-            <label>Full Name</label>
-            <input type="text" name="name" required placeholder="John Doe">
-            
-            <label>Date of Birth</label>
-            <input type="date" name="dob" required>
-            
-            <label>Time of Birth</label>
-            <input type="time" name="time" required>
-
-            <label>Place of Birth (City)</label>
-            <input type="text" name="place" required placeholder="e.g. Ahmedabad">
+            <!-- HORIZONTAL INPUT FIELDS -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="name" required placeholder="Name">
+                </div>
+                <div class="form-group">
+                    <label>Date of Birth</label>
+                    <input type="date" name="dob" required>
+                </div>
+                <div class="form-group">
+                    <label>Time of Birth</label>
+                    <input type="time" name="time" required>
+                </div>
+                <div class="form-group">
+                    <label>Birth Place</label>
+                    <input type="text" name="place" required placeholder="City">
+                </div>
+            </div>
             
             <button type="submit">Read My Stars</button>
         </form>
@@ -123,7 +131,7 @@
         {% if result %}
         <div class="result-box">
             <div class="result-item"><span>Seeker</span> {{ result.name }} (Born in {{ result.place }})</div>
-            <div class="result-item"><span>Accurate Moon Sign (Rashi)</span> {{ result.moon_sign }}</div>
+            <div class="result-item"><span>Moon Sign (Rashi)</span> {{ result.moon_sign }}</div>
             <div class="result-item"><span>Career & Profession</span> {{ result.career }} 💼</div>
             <div class="result-item"><span>Wealth & Finances</span> {{ result.money }} 💰</div>
             <div class="result-item"><span>Relationships & Marriage</span> {{ result.marriage }} ✨</div>
@@ -131,16 +139,5 @@
         {% endif %}
     </div>
 
-    <!-- JavaScript to change backgrounds smoothly every 10 seconds -->
-    <script>
-        const slides = document.querySelectorAll('.slide');
-        let currentSlide = 0;
-
-        setInterval(() => {
-            slides[currentSlide].classList.remove('active');
-            currentSlide = (currentSlide + 1) % slides.length;
-            slides[currentSlide].classList.add('active');
-        }, 10000); // 10000 ms = 10 seconds
-    </script>
 </body>
 </html>
