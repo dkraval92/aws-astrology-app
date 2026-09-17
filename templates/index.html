@@ -58,7 +58,7 @@
         }
         button:hover { background: #b8972e; box-shadow: 0 0 20px rgba(212, 175, 55, 0.5); }
 
-        /* RIGHT SIDE: SMOOTH MOVING GALAXY VIDEO */
+        /* RIGHT SIDE: LOCAL VIDEO STYLING */
         .galaxy-wrapper {
             position: relative;
             width: 480px;
@@ -78,7 +78,7 @@
             pointer-events: none;
         }
 
-        .galaxy-video {
+        .local-video {
             width: 95%;
             height: 95%;
             object-fit: cover;
@@ -158,12 +158,12 @@
             {% endif %}
         </div>
 
-        <!-- Right Side: Live Moving Galaxy Video -->
+        <!-- Right Side: Local Server Video using url_for -->
         <div class="right-content">
             <div class="galaxy-wrapper">
                 <div class="galaxy-glow-aura"></div>
-                <video autoplay muted loop playsinline class="galaxy-video">
-                    <source src="https://cdn.pixabay.com/video/2020/05/20/39327-422899479_large.mp4" type="video/mp4">
+                <video autoplay muted loop playsinline class="local-video">
+                    <source src="{{ url_for('static', filename='galaxy.mp4') }}" type="video/mp4">
                 </video>
             </div>
         </div>
