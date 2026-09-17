@@ -8,22 +8,18 @@ app = Flask(__name__)
 
 def calculate_real_moon_sign(dob, time_str):
     try:
-        # 1. IST को UTC में बदलना
         dt_str = f"{dob} {time_str}"
         local_dt = datetime.strptime(dt_str, "%Y-%m-%d %H:%M")
         utc_dt = local_dt - timedelta(hours=5, minutes=30)
         
-        # 2. Strict Geocentric Position (बिना Latitude/Longitude के)
         ephem_date = ephem.Date(utc_dt)
         moon = ephem.Moon(ephem_date)
         ecliptic = ephem.Ecliptic(moon)
         tropical_lon = math.degrees(ecliptic.lon)
         
-        # 3. Precise Lahiri Ayanamsa Calculation (Chitra Paksha)
         days_from_2000 = (utc_dt - datetime(2000, 1, 1, 12, 0)).total_seconds() / 86400.0
         ayanamsa = 23.85 + (days_from_2000 / 365.25) * 0.0139694
         
-        # 4. Vedic Sidereal Longitude 
         vedic_lon = (tropical_lon - ayanamsa) % 360
         sign_index = int(vedic_lon / 30)
         
@@ -68,15 +64,14 @@ def get_prediction(name, dob, place):
 def index():
     result = None
     if request.method == 'POST':
+        # .title() सुनिश्चित करता है कि पहला अक्षर हमेशा Capital हो
         name = request.form.get('name').title()
         dob = request.form.get('dob')
         time_str = request.form.get('time')
         place = request.form.get('place').title()
         
-        # असली मून साइन का कैलकुलेशन
         moon_sign = calculate_real_moon_sign(dob, time_str)
         
-        # बाकी प्रेडिक्शन का लॉजिक
         result = get_prediction(name, dob, place)
         result['name'] = name
         result['place'] = place
