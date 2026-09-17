@@ -2,43 +2,29 @@ from flask import Flask, render_template, request
 import hashlib
 import ephem
 import math
-from geopy.geocoders import Nominatim
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-geolocator = Nominatim(user_agent="aws_cloud_astrology_app")
 
-def calculate_real_moon_sign(dob, time_str, place):
+def calculate_real_moon_sign(dob, time_str):
     try:
-        # 1. IST समय को UTC में बदलना (सबसे बड़ी गलती यहीं ठीक की गई है)
-        local_dt = datetime.strptime(f"{dob} {time_str}", "%Y-%m-%d %H:%M")
+        # 1. IST को UTC में बदलना
+        dt_str = f"{dob} {time_str}"
+        local_dt = datetime.strptime(dt_str, "%Y-%m-%d %H:%M")
         utc_dt = local_dt - timedelta(hours=5, minutes=30)
-        ephem_date = utc_dt.strftime("%Y/%m/%d %H:%M:%S")
-
-        # 2. जगह का Latitude/Longitude निकालना
-        try:
-            location = geolocator.geocode(place, timeout=5)
-            lat = str(location.latitude)
-            lon = str(location.longitude)
-        except:
-            lat = '23.0225' # Default to Ahmedabad if place not found
-            lon = '72.5714'
-
-        # 3. Observer (व्यक्ति) की स्थिति सेट करना
-        observer = ephem.Observer()
-        observer.date = ephem_date
-        observer.lat = lat
-        observer.lon = lon
         
-        moon = ephem.Moon()
-        moon.compute(observer)
+        # 2. Strict Geocentric Position (बिना Latitude/Longitude के)
+        ephem_date = ephem.Date(utc_dt)
+        moon = ephem.Moon(ephem_date)
+        ecliptic = ephem.Ecliptic(moon)
+        tropical_lon = math.degrees(ecliptic.lon)
         
-        # 4. Ayanamsa Calculation (सटीक वैदिक गणित के लिए)
-        year_fraction = utc_dt.year + (utc_dt.timetuple().tm_yday / 365.25)
-        ayanamsa = 23.85 + (year_fraction - 2000) * 0.0139694
+        # 3. Precise Lahiri Ayanamsa Calculation (Chitra Paksha)
+        days_from_2000 = (utc_dt - datetime(2000, 1, 1, 12, 0)).total_seconds() / 86400.0
+        ayanamsa = 23.85 + (days_from_2000 / 365.25) * 0.0139694
         
-        lon_deg = math.degrees(ephem.Ecliptic(moon).lon)
-        vedic_lon = (lon_deg - ayanamsa) % 360
+        # 4. Vedic Sidereal Longitude 
+        vedic_lon = (tropical_lon - ayanamsa) % 360
         sign_index = int(vedic_lon / 30)
         
         rashis = ["Mesha (Aries) ♈", "Vrishabha (Taurus) ♉", "Mithuna (Gemini) ♊", "Karka (Cancer) ♋", 
@@ -47,11 +33,9 @@ def calculate_real_moon_sign(dob, time_str, place):
                   
         return rashis[sign_index]
     except Exception as e:
-        return "Unable to calculate (Check details)"
+        return "Calculation Error"
 
-def get_prediction(name, dob, time_str, place):
-    moon_sign = calculate_real_moon_sign(dob, time_str, place)
-    
+def get_prediction(name, dob, place):
     hash_str = f"{name}{dob}{place}"
     hash_val = int(hashlib.md5(hash_str.encode()).hexdigest(), 16)
     
@@ -75,7 +59,6 @@ def get_prediction(name, dob, time_str, place):
     ]
     
     return {
-        "moon_sign": moon_sign,
         "career": careers[hash_val % 4],
         "money": money[(hash_val + 1) % 4],
         "marriage": marriage[(hash_val + 2) % 4]
@@ -90,9 +73,14 @@ def index():
         time_str = request.form.get('time')
         place = request.form.get('place').title()
         
-        result = get_prediction(name, dob, time_str, place)
+        # असली मून साइन का कैलकुलेशन
+        moon_sign = calculate_real_moon_sign(dob, time_str)
+        
+        # बाकी प्रेडिक्शन का लॉजिक
+        result = get_prediction(name, dob, place)
         result['name'] = name
         result['place'] = place
+        result['moon_sign'] = moon_sign
         
     return render_template('index.html', result=result)
 
