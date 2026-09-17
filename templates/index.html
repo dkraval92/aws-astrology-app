@@ -1,17 +1,82 @@
 <!DOCTYPE html>
-<html>
-<head><title>Cloud Astrology</title></head>
-<body style="font-family: Arial; padding: 50px; background: #f4f4f4;">
-    <div style="background: white; padding: 30px; border-radius: 10px; max-width: 400px; margin: auto;">
-        <h2>AWS Astrology App</h2>
-        <form method='POST'>
-            <input type='text' name='name' placeholder='Enter your Name' required style="width: 100%; padding: 10px; margin-bottom: 10px;">
-            <input type='date' name='dob' required style="width: 100%; padding: 10px; margin-bottom: 10px;">
-            <button type='submit' style="width: 100%; padding: 10px; background: #ff9900; color: white; border: none; font-weight: bold;">Get Prediction</button>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Cloud Astrology</title>
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #130a2b 0%, #0b0716 100%);
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            width: 100%;
+            max-width: 500px;
+        }
+        h2 { text-align: center; color: #f0a500; font-weight: 600; margin-bottom: 5px; }
+        p.subtitle { text-align: center; font-size: 14px; color: #aaaaaa; margin-bottom: 30px; }
+        
+        label { font-size: 14px; color: #dddddd; margin-bottom: 5px; display: block; }
+        input {
+            width: 100%; padding: 12px; margin-bottom: 20px; box-sizing: border-box;
+            background: rgba(0, 0, 0, 0.2); border: 1px solid #444;
+            color: white; border-radius: 8px; font-family: 'Poppins', sans-serif;
+        }
+        input:focus { outline: none; border-color: #f0a500; }
+        
+        button {
+            width: 100%; padding: 15px; background: linear-gradient(45deg, #f0a500, #ff5e00);
+            color: white; border: none; border-radius: 8px; font-weight: 600;
+            font-size: 16px; cursor: pointer; transition: 0.3s;
+        }
+        button:hover { background: linear-gradient(45deg, #ff5e00, #f0a500); box-shadow: 0 5px 15px rgba(240, 165, 0, 0.4); }
+        
+        .result-box { margin-top: 30px; padding: 20px; background: rgba(0, 0, 0, 0.3); border-radius: 12px; border-left: 5px solid #f0a500; }
+        .result-item { margin-bottom: 15px; font-size: 14px; color: #eeeeee; }
+        .result-item span { font-weight: 600; color: #f0a500; display: block; font-size: 12px; text-transform: uppercase; letter-spacing: 1px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>AWS Astrology Insights</h2>
+        <p class="subtitle">Cloud-Powered Vedic Predictions</p>
+
+        <form method="POST">
+            <label>Full Name</label>
+            <input type="text" name="name" required placeholder="Enter your name">
+            
+            <label>Date of Birth</label>
+            <input type="date" name="dob" required>
+            
+            <button type="submit">Reveal My Destiny</button>
         </form>
-        {% if prediction %}
-            <p style="margin-top: 20px; color: blue;"><b>Result:</b> {{ prediction }}</p>
+
+        {% if result %}
+        <div class="result-box">
+            <div class="result-item"><span>User</span> {{ result.name }}</div>
+            <div class="result-item"><span>Moon Sign (Rashi)</span> {{ result.moon_sign }} 🌙</div>
+            <div class="result-item"><span>Career & Profession</span> {{ result.career }} 💼</div>
+            <div class="result-item"><span>Wealth & Money</span> {{ result.money }} 💰</div>
+            <div class="result-item"><span>Marriage & Relationships</span> {{ result.marriage }} ❤️</div>
+        </div>
         {% endif %}
     </div>
+
 </body>
 </html>
