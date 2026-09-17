@@ -1,15 +1,10 @@
-from flask import Flask, render_template, request, send_file
+from flask import Flask, render_template, request
 import hashlib
 import ephem
 import math
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
-
-# सर्वर से galaxy.jpg फोटो दिखाने के लिए
-@app.route('/galaxy.jpg')
-def serve_galaxy():
-    return send_file('galaxy.jpg', mimetype='image/jpeg')
 
 def calculate_real_moon_sign(dob, time_str):
     try:
