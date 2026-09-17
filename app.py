@@ -5,6 +5,7 @@ import math
 from datetime import datetime, timedelta
 
 app = Flask(__name__)
+app.config['TEMPLATES_AUTO_RELOAD'] = True  <-- यह लाइन जोड़ दें
 
 def calculate_real_moon_sign(dob, time_str):
     try:
