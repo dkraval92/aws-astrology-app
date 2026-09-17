@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head><title>Cloud Astrology</title></head>
+<body style="font-family: Arial; padding: 50px; background: #f4f4f4;">
+    <div style="background: white; padding: 30px; border-radius: 10px; max-width: 400px; margin: auto;">
+        <h2>AWS Astrology App</h2>
+        <form method='POST'>
+            <input type='text' name='name' placeholder='Enter your Name' required style="width: 100%; padding: 10px; margin-bottom: 10px;">
+            <input type='date' name='dob' required style="width: 100%; padding: 10px; margin-bottom: 10px;">
+            <button type='submit' style="width: 100%; padding: 10px; background: #ff9900; color: white; border: none; font-weight: bold;">Get Prediction</button>
+        </form>
+        {% if prediction %}
+            <p style="margin-top: 20px; color: blue;"><b>Result:</b> {{ prediction }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
